@@ -1,0 +1,23 @@
+# Зависимости и сборка — восстанавливаются командой, в репозитории им не место
+node_modules/
+dist/
+preview-dist/
+bin/
+obj/
+
+# Локальные настройки с ключами.
+# На GitHub эти значения живут в Settings -> Secrets and variables -> Actions,
+# а не в файлах: репозиторий может стать публичным, ключ утечёт вместе с ним.
+local.settings.json
+deploy/.env
+.env
+
+# Служебное
+.vs/
+.vscode/
+*.user
+.DS_Store
+Thumbs.db
+
+# Резервные копии редакторов
+*.bak

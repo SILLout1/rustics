@@ -1,0 +1,1218 @@
+/* ============================================================
+   RUSTICS — стили лендинга
+   Палитра снята пипеткой с фирменного арта
+   ============================================================ */
+
+/* Шрифты лежат в проекте, а не тянутся с Google Fonts:
+   в РФ их CDN нестабилен, а падение шрифта ломает всю типографику. */
+@font-face {
+  font-family: 'Oswald'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('./assets/fonts/oswald-cyrillic-500-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Oswald'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('./assets/fonts/oswald-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Oswald'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('./assets/fonts/oswald-cyrillic-600-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Oswald'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('./assets/fonts/oswald-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('./assets/fonts/manrope-cyrillic-400-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Manrope'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('./assets/fonts/manrope-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('./assets/fonts/manrope-cyrillic-600-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Manrope'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('./assets/fonts/manrope-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope'; font-style: normal; font-weight: 800; font-display: swap;
+  src: url('./assets/fonts/manrope-cyrillic-800-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Manrope'; font-style: normal; font-weight: 800; font-display: swap;
+  src: url('./assets/fonts/manrope-latin-800-normal.woff2') format('woff2');
+}
+
+:root {
+  /* фон */
+  --abyss:   #16091F;
+  --deep:    #200E30;
+  --panel:   #2A1440;
+
+  /* цвета сняты пипеткой с фирменного арта */
+  --violet:  #473873;
+  --grape:   #7D4DAA;
+  --magenta: #CE70B7;
+  --pink:    #F1A1CB;
+  --coral:   #EF967F;
+  --sun:     #FDDEA0;
+
+  /* текст */
+  --text:    #F4E6F2;
+  --mute:    #B394C4;
+  --dim:     #7E6690;
+
+  --line:    rgba(206, 112, 183, 0.22);
+  --hair:    rgba(71, 56, 115, 0.5);
+
+  --shell:   1180px;
+  --gut:     clamp(20px, 5vw, 48px);
+
+  --display: 'Oswald', 'Arial Narrow', sans-serif;
+  --body:    'Manrope', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--abyss);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding-inline: var(--gut);
+}
+
+/* линия горизонта — разделитель, взятый из отражения солнца на воде */
+.horizon {
+  position: relative;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(90deg,
+    transparent, var(--violet) 18%, var(--magenta) 50%, var(--violet) 82%, transparent);
+  opacity: 0.55;
+}
+.horizon::after {
+  content: '';
+  position: absolute;
+  inset: -28px 15% auto;
+  height: 28px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(239, 150, 127, 0.16), transparent 70%);
+  pointer-events: none;
+}
+
+/* ---------- появление блоков при прокрутке ----------
+   Прячем только когда класс has-reveal стоит на <html>, а ставит его скрипт.
+   Без JS или при отключённых анимациях правила не срабатывают вовсе, и всё
+   видно сразу — пустая страница из-за неотработавшего наблюдателя невозможна. */
+.has-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.has-reveal [data-reveal][data-shown='true'] {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s cubic-bezier(0.2, 0.7, 0.3, 1),
+              transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* Соседи в одной сетке появляются по очереди, а не хором: так глаз успевает
+   прочитать порядок. Задержки маленькие — это акцент, а не ожидание. */
+.has-reveal .rate:nth-child(2),
+.has-reveal .feat:nth-child(2),
+.has-reveal .wipe__row:nth-child(2) { transition-delay: 0.06s; }
+.has-reveal .rate:nth-child(3),
+.has-reveal .feat:nth-child(3),
+.has-reveal .wipe__row:nth-child(3) { transition-delay: 0.12s; }
+.has-reveal .rate:nth-child(4),
+.has-reveal .feat:nth-child(4) { transition-delay: 0.18s; }
+.has-reveal .rate:nth-child(5),
+.has-reveal .feat:nth-child(5) { transition-delay: 0.24s; }
+.has-reveal .rate:nth-child(6),
+.has-reveal .feat:nth-child(6) { transition-delay: 0.30s; }
+.has-reveal .social:nth-child(2) { transition-delay: 0.08s; }
+
+/* ============================ ШАПКА ============================ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(22, 9, 31, 0.72);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s, background 0.25s;
+}
+.nav[data-stuck='true'] {
+  border-bottom-color: var(--line);
+  background: rgba(22, 9, 31, 0.9);
+}
+.nav__in {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 68px;
+}
+/* ---------- знак в шапке ----------
+   Надписи здесь больше нет, знаком работает маяк — поэтому он крупнее прежнего
+   и держит на себе акцент. Само название набрано на первом экране и в подвале,
+   так что бренд не теряется. */
+.brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.beacon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  overflow: visible;   /* расходящееся кольцо выходит за рамку */
+  /* backwards, а не both: с both завершившаяся анимация продолжала бы удерживать
+     transform, и увеличение при наведении не сработало бы — анимированное
+     значение сильнее обычного правила. */
+  animation: logo-in 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+  transition: width 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
+              height 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
+              transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@keyframes logo-in {
+  from { opacity: 0; transform: translateX(-10px) scale(0.96); filter: brightness(1.6); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* При прокрутке шапка подбирается — знак вместе с ней */
+.nav[data-stuck='true'] .beacon { width: 36px; height: 36px; }
+
+.beacon__ring {
+  fill: none;
+  stroke: var(--magenta);
+  stroke-width: 1.1;
+  opacity: 0.55;
+  transition: opacity 0.3s, stroke 0.3s;
+}
+
+.beacon__body { fill: url(#beaconTower); }
+.beacon__halo { fill: url(#beaconGlow); }
+.beacon__lamp { fill: var(--sun); }
+
+.beacon__sweep path { fill: var(--sun); opacity: 0.18; }
+
+/* transform-box: view-box даёт систему координат самой картинки, иначе точка
+   вращения считалась бы от рамки группы, а она у луча огромная */
+.beacon__sweep {
+  transform-box: view-box;
+  transform-origin: 16px 10.4px;
+  animation: sweep 11s linear infinite;
+}
+@keyframes sweep { to { transform: rotate(360deg); } }
+
+/* Фонарь вспыхивает дважды за оборот — по разу на каждый из двух лучей,
+   как у настоящего маяка с двумя линзами. */
+.beacon__halo { animation: lamp 11s ease-in-out infinite; }
+@keyframes lamp {
+  0%, 100% { opacity: 0.6; }
+  6%       { opacity: 0.9; }
+  25%      { opacity: 0.55; }
+  56%      { opacity: 0.9; }
+  75%      { opacity: 0.55; }
+}
+
+.brand:hover .beacon { transform: scale(1.06); }
+.brand:hover .beacon__ring { opacity: 1; stroke: var(--coral); }
+.brand:hover .beacon__halo { opacity: 1; }
+
+/* Кому движение мешает — маяк остаётся, но замирает */
+@media (prefers-reduced-motion: reduce) {
+  .beacon { animation: none; }
+  .beacon__sweep { display: none; }
+  .beacon__halo { animation: none; }
+}
+
+.nav__links {
+  display: flex;
+  gap: 26px;
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 600;
+}
+.nav__links a {
+  text-decoration: none;
+  color: var(--mute);
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.18s, border-color 0.18s;
+}
+.nav__links a:hover { color: var(--text); border-bottom-color: var(--coral); }
+
+/* значки соцсетей: спутники кнопки входа, а не самостоятельные акценты —
+   поэтому приглушены, а цвет сети проступает только под курсором */
+.mini {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.mini__a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  color: var(--dim);
+  transition: color 0.18s, background 0.18s, transform 0.18s;
+}
+.mini__a svg { width: 17px; height: 17px; fill: currentColor; }
+.mini__a:hover { background: var(--panel); transform: translateY(-1px); }
+.mini__a[data-net='tg']:hover { color: #6FC0E8; }
+.mini__a[data-net='vk']:hover { color: #7BA7E0; }
+.mini__a[data-net='dc']:hover { color: #8CA0F0; }
+
+/* вход через Steam */
+.steam {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 10px 20px;
+  border-radius: 999px;
+  color: var(--text);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--line);
+  transition: box-shadow 0.18s, background 0.18s, transform 0.18s;
+}
+.steam:hover {
+  box-shadow: inset 0 0 0 1px var(--magenta);
+  background: var(--violet);
+  transform: translateY(-1px);
+}
+.steam__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.steam:hover .steam__icon { transform: rotate(-12deg) scale(1.1); }
+
+/* переключатель языка — обычный элемент в потоке шапки, справа от кнопки входа */
+.langsw {
+  position: relative;
+  z-index: 60;
+}
+.langsw__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  background: rgba(22, 9, 31, 0.85);
+  backdrop-filter: blur(10px);
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 12px;
+  box-shadow: inset 0 0 0 1px var(--line);
+  cursor: pointer;
+  transition: box-shadow 0.18s;
+}
+.langsw__btn:hover { box-shadow: inset 0 0 0 1px var(--magenta); }
+.langsw__btn svg:first-child { border-radius: 2px; flex-shrink: 0; }
+.langsw__chev {
+  width: 14px;
+  height: 14px;
+  margin-left: 2px;
+  color: var(--mute);
+  transition: transform 0.18s;
+}
+.langsw__chev[data-open='true'] { transform: rotate(180deg); }
+.langsw__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  background: var(--panel);
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--line), 0 12px 28px rgba(0, 0, 0, 0.4);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.langsw__opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mute);
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.langsw__opt svg { border-radius: 2px; flex-shrink: 0; }
+.langsw__opt:hover { background: rgba(206, 112, 183, 0.1); }
+.langsw__opt[data-active='true'] { color: var(--coral); }
+
+/* полоса с ошибкой входа — до неё сбой Steam выглядел как «ничего не произошло» */
+.authbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px var(--gut);
+  font-size: 14px;
+  color: #2A0E12;
+  background: var(--coral);
+}
+.authbar button {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  font-size: 20px;
+  line-height: 1;
+  color: inherit;
+  background: rgba(42, 14, 18, 0.14);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.authbar button:hover { background: rgba(42, 14, 18, 0.28); }
+
+/* профиль вошедшего игрока */
+.me {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 5px 6px 5px 5px;
+  border-radius: 999px;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.me__pic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.me__pic--empty { background: var(--violet); }
+.me__name {
+  font-size: 14px;
+  font-weight: 600;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.me__out {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  color: var(--dim);
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color 0.16s, background 0.16s;
+}
+.me__out svg { width: 15px; height: 15px; }
+.me__out:hover { color: #FF3B3B; background: rgba(255, 59, 59, 0.16); }
+
+/* ============================ ГЕРОЙ ============================ */
+.hero { position: relative; isolation: isolate; }
+
+.hero__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1774 / 887;
+  overflow: hidden;
+}
+.hero__media img,
+.hero__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* низ арта растворяем в фоне страницы, чтобы не было резкой границы */
+.hero__fade {
+  position: absolute;
+  inset: auto 0 -1px 0;
+  height: 42%;
+  background: linear-gradient(to bottom, transparent, var(--abyss) 92%);
+  pointer-events: none;
+}
+
+/* плашка подключения — главное, зачем игрок пришёл */
+.connect {
+  position: relative;
+  z-index: 2;
+  margin-top: -84px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 18px 22px;
+  background: linear-gradient(180deg, rgba(42, 20, 64, 0.94), rgba(32, 14, 48, 0.94));
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.85);
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(22px); } }
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 20px;
+  border-right: 1px solid var(--line);
+}
+.status__dot {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #5FD48A;
+  box-shadow: 0 0 0 4px rgba(95, 212, 138, 0.16);
+  flex-shrink: 0;
+}
+/* Расходящееся кольцо — единственная бесконечная анимация на странице.
+   Она здесь оправдана: это признак живых данных, а не украшение. */
+.status__dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid #5FD48A;
+  animation: ping 2.4s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+}
+@keyframes ping {
+  from { transform: scale(1); opacity: 0.7; }
+  to   { transform: scale(3.4); opacity: 0; }
+}
+/* Сервер молчит — кольцо гаснет вместе с точкой, иначе мы бы изображали
+   активность там, где данных нет */
+.status__dot[data-off='true']::after { display: none; }
+.status__dot[data-off='true'] {
+  background: var(--dim);
+  box-shadow: 0 0 0 4px rgba(126, 102, 144, 0.14);
+}
+.status__num {
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+}
+.status__v {
+  display: inline-block;
+  font-style: normal;
+  animation: tick 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+@keyframes tick {
+  0%   { transform: translateY(-6px) scale(1.14); color: var(--sun); }
+  60%  { color: var(--sun); }
+  100% { transform: none; color: inherit; }
+}
+.status__num span { color: var(--dim); font-size: 17px; }
+.status__cap { font-size: 12px; color: var(--mute); line-height: 1.2; }
+
+.cmd {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 15px;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.cmd__k { color: var(--dim); flex-shrink: 0; }
+.cmd__v { color: var(--sun); white-space: nowrap; }
+
+/* Две кнопки — одна ячейка сетки: «Играть» ведёт, «Копировать» страхует,
+   и разносить их по колонкам незачем. */
+.acts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Главное действие. Ярче копирования, потому что копирование — запасной путь
+   для тех, у кого Rust уже открыт. */
+.play {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--abyss);
+  background: linear-gradient(180deg, var(--sun), var(--coral));
+  border-radius: 3px;
+  padding: 11px 20px;
+  box-shadow: 0 8px 22px -8px rgba(239, 150, 127, 0.7);
+  transition: filter 0.16s, transform 0.16s, box-shadow 0.16s;
+}
+.play svg { width: 15px; height: 15px; fill: currentColor; }
+.play:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 10px 26px -8px rgba(239, 150, 127, 0.9);
+}
+.play:active { transform: translateY(1px); }
+
+/* Копирование стало вторым по значимости — снимаем с него заливку, чтобы две
+   одинаково яркие кнопки не спорили друг с другом. */
+.copy {
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  background: none;
+  border: 0;
+  box-shadow: inset 0 0 0 1px var(--line);
+  border-radius: 3px;
+  padding: 11px 18px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.16s, background 0.16s, box-shadow 0.16s, transform 0.16s;
+}
+.copy:hover { background: var(--panel); box-shadow: inset 0 0 0 1px var(--magenta); }
+.copy:active { transform: translateY(1px); }
+.copy[data-done='true'] {
+  background: none;
+  color: #5FD48A;
+  box-shadow: inset 0 0 0 1px rgba(95, 212, 138, 0.45);
+}
+
+.hint {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--dim);
+}
+
+/* ельник — тот же силуэт, что в основании вордмарка */
+.pines {
+  display: block;
+  width: 100%;
+  height: 46px;
+  margin-top: 64px;
+}
+.pines__back  { fill: var(--violet); opacity: 0.5; }
+.pines__front { fill: #2E1B47; }
+
+/* ============================ СЕКЦИИ ============================ */
+.sec { padding-block: clamp(56px, 8vw, 92px); }
+
+.h2 {
+  font-family: var(--display);
+  font-size: clamp(28px, 4.2vw, 42px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  margin: 0 0 10px;
+}
+.lead {
+  color: var(--mute);
+  max-width: 62ch;
+  margin: 0 0 36px;
+}
+
+/* ---------- карточка сервера + характеристики ---------- */
+.srv {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 52px);
+  align-items: start;
+  margin-bottom: clamp(44px, 6vw, 68px);
+}
+/* вертикальное видео используется в своём родном формате — как карточка в списке серверов */
+.srv__card {
+  margin: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--deep);
+  box-shadow: 0 20px 50px -22px rgba(0, 0, 0, 0.8);
+}
+.srv__vid {
+  display: block;
+  width: 100%;
+  aspect-ratio: 886 / 1258;
+  object-fit: cover;
+}
+.srv__cap {
+  padding: 14px 16px 16px;
+  border-top: 1px solid var(--line);
+}
+.srv__cap b {
+  display: block;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+.srv__cap span { font-size: 12.5px; color: var(--mute); }
+
+.srv__body { display: grid; gap: 30px; }
+
+.rates {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.rate {
+  padding: 20px 22px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.rate:nth-child(3n) { border-right: 0; }
+.rate:nth-child(n + 4) { border-bottom: 0; }
+.rate { transition: background 0.2s; }
+.rate:hover { background: rgba(206, 112, 183, 0.06); }
+
+.rate__v {
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--sun);
+}
+.rate__k { font-size: 13.5px; color: var(--mute); margin-top: 6px; }
+
+/* расписание вайпов */
+.wipe { margin: 0; }
+.wipe__row {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 20px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--hair);
+}
+.wipe__row:last-child { border-bottom: 0; }
+.wipe dt {
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--coral);
+}
+.wipe dd { margin: 0; color: var(--mute); font-size: 15px; }
+
+/* развёрнутые особенности сервера */
+.feats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.feat { padding: 24px 26px; background: var(--abyss); }
+.feat b {
+  display: block;
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+}
+.feat p { margin: 0; font-size: 14.5px; color: var(--mute); line-height: 1.6; }
+
+/* ---------- две колонки: правила и топ ---------- */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(40px, 6vw, 76px);
+  align-items: start;
+}
+
+.rules { counter-reset: r; list-style: none; margin: 0; padding: 0; }
+.rules li {
+  counter-increment: r;
+  position: relative;
+  padding: 14px 0 14px 44px;
+  border-bottom: 1px solid var(--hair);
+}
+.rules li:last-child { border-bottom: 0; }
+.rules li::before {
+  content: counter(r);
+  position: absolute;
+  left: 0;
+  top: 15px;
+  width: 26px;
+  text-align: right;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--coral);
+}
+.rules b { display: block; font-weight: 700; font-size: 15px; }
+.rules span { color: var(--mute); font-size: 14px; }
+
+.tbl { width: 100%; border-collapse: collapse; font-size: 15px; }
+.tbl thead th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dim);
+  padding: 0 12px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.tbl thead th:last-child,
+.tbl tbody td:last-child { text-align: right; }
+.tbl tbody td { padding: 13px 12px; border-bottom: 1px solid var(--hair); }
+.tbl tbody tr:last-child td { border-bottom: 0; }
+.tbl__rank { font-family: var(--display); font-size: 17px; color: var(--magenta); width: 40px; }
+.tbl tbody tr:nth-child(1) .tbl__rank { color: var(--sun); }
+.tbl__time { color: var(--mute); font-variant-numeric: tabular-nums; }
+
+.stub {
+  padding: 28px 20px;
+  border: 1px dashed var(--violet);
+  border-radius: 4px;
+  color: var(--mute);
+  font-size: 14px;
+  text-align: center;
+}
+
+.h3 {
+  font-family: var(--display);
+  font-size: 21px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0 0 14px;
+}
+
+/* ---------- свод правил: раскрывающиеся разделы ---------- */
+.rulebook { display: grid; gap: 12px; }
+
+.rulegrp {
+  border-radius: 6px;
+  background: var(--deep);
+  box-shadow: inset 0 0 0 1px var(--hair);
+  scroll-margin-top: 92px;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.rulegrp[data-open='true'] {
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.rulegrp__h { margin: 0; }
+.rulegrp__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 17px clamp(16px, 3vw, 26px);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.rulegrp__title { flex: 1; min-width: 0; transition: color 0.2s; }
+.rulegrp[data-open='true'] .rulegrp__title { color: var(--sun); }
+
+.rulegrp__count {
+  flex-shrink: 0;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--mute);
+  background: rgba(71, 56, 115, 0.55);
+}
+.rulegrp__chev {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--dim);
+  transition: transform 0.24s ease, color 0.2s;
+}
+.rulegrp__head:hover .rulegrp__chev { color: var(--text); }
+.rulegrp[data-open='true'] .rulegrp__chev { transform: rotate(180deg); color: var(--coral); }
+
+/* 0fr → 1fr раскрывает панель ровно по высоте текста, без замеров в JS */
+.rulegrp__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s ease;
+}
+.rulegrp[data-open='true'] .rulegrp__panel { grid-template-rows: 1fr; }
+
+.rulegrp__inner {
+  overflow: hidden;
+  /* закрытый раздел не должен попадать ни в поиск по странице, ни в озвучку;
+     visibility гасим только после того, как панель схлопнулась */
+  visibility: hidden;
+  transition: visibility 0s linear 0.28s;
+}
+.rulegrp[data-open='true'] .rulegrp__inner { visibility: visible; transition-delay: 0s; }
+
+.rulelist {
+  list-style: none;
+  margin: 0;
+  padding: 0 clamp(16px, 3vw, 26px) 6px;
+  max-width: 78ch;
+}
+.rulelist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(71, 56, 115, 0.42);
+  transition: padding-left 0.18s;
+}
+.rulelist li:last-child { border-bottom: 0; }
+.rulelist li:hover { padding-left: 4px; }
+/* Номер пункта — просто номер: «раздел.пункт», как в любом своде правил.
+   Раньше здесь был градиентный кружок; он перетягивал внимание на себя и
+   ничего не сообщал, а по такому номеру на пункт можно сослаться в чате. */
+.rulelist__num {
+  flex-shrink: 0;
+  width: 30px;
+  padding-top: 2px;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+  color: var(--dim);
+  transition: color 0.18s;
+}
+.rulelist li:hover .rulelist__num { color: var(--coral); }
+.rulelist__body { min-width: 0; }
+.rulelist b { display: block; font-weight: 600; font-size: 15px; }
+.rulelist__desc { display: block; margin-top: 3px; color: var(--mute); font-size: 14px; }
+
+.updated {
+  margin: 6px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--dim);
+}
+
+/* ---------- график численности ---------- */
+.spark { margin: 0 0 22px; }
+.spark svg {
+  display: block;
+  width: 100%;
+  height: 90px;
+  overflow: visible;
+}
+.spark__area { fill: rgba(206, 112, 183, 0.16); }
+.spark__line {
+  fill: none;
+  stroke: var(--magenta);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+/* График рисуется слева направо, как будто его чертят по мере поступления
+   замеров. Заливка догоняет линию с задержкой. Оба правила живут под has-reveal,
+   поэтому без скрипта график просто нарисован целиком. */
+.has-reveal .spark__line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.has-reveal .spark[data-shown='true'] .spark__line {
+  animation: draw 1.1s 0.15s cubic-bezier(0.3, 0.6, 0.3, 1) forwards;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+.has-reveal .spark__area { opacity: 0; }
+.has-reveal .spark[data-shown='true'] .spark__area {
+  animation: area-in 0.5s 0.7s ease forwards;
+}
+@keyframes area-in { to { opacity: 1; } }
+
+.spark__cap {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--dim);
+}
+
+/* ---------- переключатель периода ---------- */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.tabs__b {
+  padding: 7px 15px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--mute);
+  background: var(--deep);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--hair);
+  cursor: pointer;
+  transition: color 0.16s, background 0.16s, box-shadow 0.16s;
+}
+.tabs__b:hover { color: var(--text); }
+.tabs__b[data-active='true'] {
+  color: var(--abyss);
+  background: var(--sun);
+  box-shadow: none;
+}
+
+/* ---------- топ игроков: две половины рядом ---------- */
+.tops {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: start;
+}
+
+/* ---------- помощь серверу: единственный тёплый блок ---------- */
+.help {
+  padding: clamp(32px, 5vw, 52px);
+  border-radius: 4px;
+  background:
+    radial-gradient(120% 140% at 8% 110%, rgba(239, 150, 127, 0.16), transparent 62%),
+    linear-gradient(180deg, rgba(42, 20, 64, 0.9), rgba(32, 14, 48, 0.9));
+  border: 1px solid rgba(239, 150, 127, 0.28);
+}
+.help__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 36px;
+  align-items: center;
+}
+.help ul { margin: 18px 0 0; padding-left: 18px; color: var(--mute); font-size: 15px; }
+.help li { margin-bottom: 6px; }
+.help li::marker { color: var(--coral); }
+
+.btn {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  padding: 14px 28px;
+  border-radius: 3px;
+  white-space: nowrap;
+  transition: filter 0.16s, transform 0.16s;
+}
+.btn:hover { filter: brightness(1.1); }
+.btn:active { transform: translateY(1px); }
+.btn--warm { background: linear-gradient(180deg, var(--sun), var(--coral)); color: var(--abyss); }
+
+/* ---------- соцсети ---------- */
+.socials { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.social {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 26px 28px;
+  text-decoration: none;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(42, 20, 64, 0.55), transparent);
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.social:hover {
+  border-color: var(--magenta);
+  background: linear-gradient(180deg, rgba(58, 27, 88, 0.7), transparent);
+  transform: translateY(-2px);
+}
+.social svg { width: 30px; height: 30px; flex-shrink: 0; }
+.social b {
+  display: block;
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.social span { font-size: 13px; color: var(--mute); }
+
+/* ============================ ПОДВАЛ ============================ */
+.foot {
+  border-top: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(42, 20, 64, 0.45), transparent);
+  margin-top: clamp(20px, 4vw, 40px);
+}
+.foot__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 52px);
+  padding-block: clamp(38px, 5vw, 56px) 36px;
+}
+.foot__brand img {
+  display: block;
+  height: 28px;
+  width: auto;
+  mix-blend-mode: screen;
+  margin-bottom: 14px;
+}
+.foot__brand p {
+  margin: 0 0 18px;
+  font-size: 14px;
+  color: var(--mute);
+  max-width: 34ch;
+  line-height: 1.6;
+}
+.foot__ip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 14px;
+  color: var(--sun);
+  background: none;
+  border: 0;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--line);
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: box-shadow 0.18s;
+}
+.foot__ip:hover { box-shadow: inset 0 0 0 1px var(--magenta); }
+.foot__ip span { font-family: var(--body); font-size: 11.5px; color: var(--dim); }
+
+.foot__col { display: flex; flex-direction: column; gap: 11px; }
+.foot__col h4 {
+  margin: 0 0 4px;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+.foot__col a {
+  width: fit-content;
+  font-size: 14px;
+  color: var(--mute);
+  text-decoration: none;
+  transition: color 0.18s;
+}
+.foot__col a:hover { color: var(--coral); }
+
+.foot__bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  justify-content: space-between;
+  padding-block: 18px 34px;
+  border-top: 1px solid var(--hair);
+  font-size: 13px;
+  color: var(--dim);
+}
+
+@media (max-width: 1080px) {
+  .feats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .nav__links { display: none; }
+  .me__name { max-width: 100px; }
+
+  .hero__media { aspect-ratio: 886 / 1258; max-height: 78vh; }
+
+  .connect { grid-template-columns: 1fr; gap: 14px; margin-top: -46px; }
+  .status { border-right: 0; border-bottom: 1px solid var(--line); padding: 0 0 14px; }
+  /* Кнопки во всю ширину и поровну: на телефоне обе должны попадать
+     под большой палец, а «Играть» остаётся первой по порядку чтения. */
+  .acts { width: 100%; }
+  .play, .copy { flex: 1; justify-content: center; text-align: center; }
+  .cmd { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .cmd__k { font-size: 12.5px; }
+  .cmd__v { font-size: 17px; }
+  .pines { margin-top: 44px; height: 32px; }
+
+  .srv { grid-template-columns: 1fr; }
+  .rates { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rate:nth-child(3n) { border-right: 1px solid var(--line); }
+  .rate:nth-child(2n) { border-right: 0; }
+  .rate:nth-child(n + 4) { border-bottom: 1px solid var(--line); }
+  .rate:nth-child(n + 5) { border-bottom: 0; }
+  .feats { grid-template-columns: 1fr; }
+  .wipe__row { grid-template-columns: 1fr; gap: 2px; }
+  .split { grid-template-columns: 1fr; }
+  .help__grid { grid-template-columns: 1fr; }
+  .socials { grid-template-columns: 1fr; }
+  .tops { grid-template-columns: 1fr; }
+  .foot__cols { grid-template-columns: 1fr 1fr; row-gap: 34px; }
+  .foot__brand { grid-column: 1 / -1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    transition-duration: 0.001s !important;
+  }
+}
+
+/* На совсем узких экранах значки соцсетей убираем: в шапке важнее вход и язык,
+   а ссылки на сообщества никуда не делись — они крупными карточками ниже. */
+@media (max-width: 560px) {
+  .mini { display: none; }
+}

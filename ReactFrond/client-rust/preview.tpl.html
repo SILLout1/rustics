@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RUSTICS — твой уютный сервер Rust</title>
+<style>
+{{CSS}}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="shell nav__in">
+    <img class="nav__logo" src="{{WORDMARK}}" alt="RUSTICS">
+    <nav class="nav__links">
+      <a href="#server">Сервер</a>
+      <a href="#rules">Правила</a>
+      <a href="#top">Топ игроков</a>
+      <a href="#help">Помощь</a>
+    </nav>
+    <a class="steam steam--in" href="#">Войти через Steam</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero__media">
+    <img id="heroImg" src="{{HERO}}" alt="RUSTICS — твой уютный сервер Rust">
+    <video id="heroVid" style="display:none" autoplay muted loop playsinline poster="{{POSTER}}">
+      <source src="{{VIDEO}}" type="video/mp4">
+    </video>
+    <div class="hero__fade"></div>
+  </div>
+
+  <div class="shell">
+    <div class="connect">
+      <div class="status">
+        <span class="status__dot" data-off="true"></span>
+        <div>
+          <div class="status__num">—<span>/150</span></div>
+          <div class="status__cap">мониторинг подключается</div>
+        </div>
+      </div>
+      <button class="cmd" onclick="doCopy()" title="Нажмите, чтобы скопировать">
+        <span class="cmd__k">client.connect</span>
+        <span class="cmd__v">195.201.0.0:28015</span>
+      </button>
+      <button class="copy" id="copyBtn" onclick="doCopy()">Копировать</button>
+      <p class="hint">Откройте консоль клавишей F1 прямо в Rust и вставьте команду.</p>
+    </div>
+  </div>
+
+  <svg class="pines" viewBox="0 0 1200 46" preserveAspectRatio="none" aria-hidden="true">
+    <path class="pines__back" d="{{PINES_BACK}}"></path>
+    <path class="pines__front" d="{{PINES_FRONT}}"></path>
+  </svg>
+</section>
+
+<section class="sec" id="server">
+  <div class="shell">
+    <h2 class="h2">Классика без сюрпризов</h2>
+    <p class="lead">Чистая ваниль x1: ничего не ускорено, ничего не куплено. Всё, что у вас будет на вайпе, вы добыли сами — как и все остальные на сервере.</p>
+    <div class="rates">
+      <div class="rate"><div class="rate__v">x1</div><div class="rate__k">Сбор ресурсов</div></div>
+      <div class="rate"><div class="rate__v">x1</div><div class="rate__k">Скорость крафта</div></div>
+      <div class="rate"><div class="rate__v">7 дней</div><div class="rate__k">Вайп карты</div></div>
+      <div class="rate"><div class="rate__v">1 мес.</div><div class="rate__k">Вайп чертежей</div></div>
+      <div class="rate"><div class="rate__v">150</div><div class="rate__k">Слотов</div></div>
+      <div class="rate"><div class="rate__v">нет</div><div class="rate__k">Платных привилегий</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="horizon">
+
+<section class="sec">
+  <div class="shell split">
+    <div id="rules">
+      <h2 class="h2">Правила</h2>
+      <p class="lead">Коротко и по делу. Спорные ситуации разбираем в Discord.</p>
+      <ol class="rules">
+        <li><b>Читы и сторонний софт — бан навсегда</b><span>Без разбирательств и без права на возврат. Проверяем по записи и логам.</span></li>
+        <li><b>Багоюз запрещён</b><span>Проход сквозь текстуры, дюп предметов, застройка под картой. Нашли баг — напишите в Discord.</span></li>
+        <li><b>Максимум 5 человек в группе</b><span>Считаются все, кто состоит в общем авторизе на шкафу, турелях или дверях.</span></li>
+        <li><b>Тиминг сверх лимита группы</b><span>Совместные рейды и оборона большими составами — предупреждение, затем бан на вайп.</span></li>
+        <li><b>Оскорбления и разжигание</b><span>Мат в чате не караем, но травля, угрозы и разжигание — мут, потом бан.</span></li>
+        <li><b>Реклама других серверов</b><span>Ссылки и зазывания в чате или голосе — бан без предупреждения.</span></li>
+      </ol>
+    </div>
+    <div id="top">
+      <h2 class="h2">Топ игроков</h2>
+      <p class="lead">По времени, проведённому на сервере. Обновляется автоматически.</p>
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Игрок</th><th>Часов</th></tr></thead>
+        <tbody>
+          <tr><td class="tbl__rank">1</td><td>Смотритель маяка</td><td class="tbl__time">312</td></tr>
+          <tr><td class="tbl__rank">2</td><td>bonkers</td><td class="tbl__time">287</td></tr>
+          <tr><td class="tbl__rank">3</td><td>Дядя Гена</td><td class="tbl__time">241</td></tr>
+          <tr><td class="tbl__rank">4</td><td>naked_beach</td><td class="tbl__time">208</td></tr>
+          <tr><td class="tbl__rank">5</td><td>Тихий</td><td class="tbl__time">196</td></tr>
+          <tr><td class="tbl__rank">6</td><td>kotleta_v2</td><td class="tbl__time">174</td></tr>
+          <tr><td class="tbl__rank">7</td><td>Одуванчик</td><td class="tbl__time">151</td></tr>
+          <tr><td class="tbl__rank">8</td><td>Пал Палыч</td><td class="tbl__time">138</td></tr>
+          <tr><td class="tbl__rank">9</td><td>solo_only</td><td class="tbl__time">122</td></tr>
+          <tr><td class="tbl__rank">10</td><td>Ночная смена</td><td class="tbl__time">109</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:13px;color:var(--dim);margin-top:14px">Данные для примера — заменятся реальными после подключения мониторинга.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="horizon">
+
+<section class="sec" id="help">
+  <div class="shell">
+    <div class="help">
+      <div class="help__grid">
+        <div>
+          <h2 class="h2">Помочь серверу</h2>
+          <p class="lead" style="margin-bottom:0">Сервер живёт на аренде железа и не продаёт преимущества. Поддержка — дело добровольное и ничего не даёт в игре, кроме нашей благодарности.</p>
+          <ul>
+            <li>Деньги идут на аренду сервера и защиту от DDoS</li>
+            <li>Никаких китов, привилегий и приоритета в очереди</li>
+            <li>Отчёт по сборам публикуем в Telegram раз в месяц</li>
+          </ul>
+        </div>
+        <a class="btn btn--warm" href="#">Поддержать сервер</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="padding-top:0">
+  <div class="shell socials">
+    <a class="social" href="#">
+      <svg viewBox="0 0 24 24" fill="#8CA0F0" aria-hidden="true"><path d="M20.3 4.5A19.8 19.8 0 0 0 15.4 3l-.3.5c1.7.4 2.9 1 4 1.7a13.5 13.5 0 0 0-11.9 0c1.1-.7 2.4-1.3 4-1.7L11 3a19.8 19.8 0 0 0-4.9 1.5C3 9.1 2.2 13.6 2.6 18a19.9 19.9 0 0 0 6 3l1.2-1.7c-1-.4-1.9-.8-2.7-1.4l.7-.5a14.2 14.2 0 0 0 12.4 0l.7.5c-.8.6-1.7 1-2.7 1.4L19.4 21a19.9 19.9 0 0 0 6-3c.5-5.1-.8-9.6-5.1-13.5ZM9.3 15.4c-1.2 0-2.1-1.1-2.1-2.4 0-1.3.9-2.4 2.1-2.4s2.2 1.1 2.2 2.4c0 1.3-1 2.4-2.2 2.4Zm5.4 0c-1.2 0-2.1-1.1-2.1-2.4 0-1.3.9-2.4 2.1-2.4s2.2 1.1 2.2 2.4c0 1.3-1 2.4-2.2 2.4Z"/></svg>
+      <div><b>Discord</b><span>Разбор жалоб, поиск тиммейтов, анонсы вайпов</span></div>
+    </a>
+    <a class="social" href="#">
+      <svg viewBox="0 0 24 24" fill="#6FC0E8" aria-hidden="true"><path d="M21.9 4.3 18.7 19c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.3 12.7l-4.8-1.5c-1-.3-1-1 .2-1.5l18.8-7.2c.9-.3 1.6.2 1.4 1.8Z"/></svg>
+      <div><b>Telegram</b><span>Новости, статус сервера и отчёты по сборам</span></div>
+    </a>
+  </div>
+</section>
+
+<hr class="horizon">
+
+<footer class="shell foot">
+  <span>RUSTICS — твой уютный сервер Rust</span>
+  <span>195.201.0.0:28015</span>
+  <a href="#">Discord</a>
+  <a href="#">Telegram</a>
+  <span style="margin-left:auto">Не аффилирован с Facepunch Studios</span>
+</footer>
+
+<script>
+  var nav = document.getElementById('nav');
+  function onScroll(){ nav.setAttribute('data-stuck', window.scrollY > 12); }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  function doCopy(){
+    var t = 'client.connect 195.201.0.0:28015';
+    var b = document.getElementById('copyBtn');
+    function done(){ b.textContent='Скопировано'; b.setAttribute('data-done','true');
+      setTimeout(function(){ b.textContent='Копировать'; b.removeAttribute('data-done'); },2000); }
+    if(navigator.clipboard){ navigator.clipboard.writeText(t).then(done, done); } else { done(); }
+  }
+
+  // тот же приём, что в React: узкий экран — вертикальное видео, широкий — баннер
+  var mq = window.matchMedia('(max-width: 900px)');
+  function swap(){
+    document.getElementById('heroImg').style.display = mq.matches ? 'none' : 'block';
+    document.getElementById('heroVid').style.display = mq.matches ? 'block' : 'none';
+  }
+  mq.addEventListener('change', swap); swap();
+</script>
+</body>
+</html>

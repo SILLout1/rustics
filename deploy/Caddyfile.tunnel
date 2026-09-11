@@ -1,0 +1,25 @@
+# Вариант для Cloudflare Tunnel: сертификатом занимается Cloudflare, поэтому
+# Caddy здесь работает по обычному HTTP внутри докер-сети и наружу не смотрит.
+# Всё остальное — раздача фронта и проксирование /api — как в основном конфиге.
+
+:80 {
+	encode gzip zstd
+
+	# Тот же домен для сайта и для /api: Steam сверяет, что адрес возврата после
+	# входа лежит внутри realm. Туннель этого не меняет.
+	handle /api/* {
+		reverse_proxy api:80
+	}
+
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+
+		@assets path /assets/*
+		header @assets Cache-Control "public, max-age=31536000, immutable"
+
+		@html path / /index.html
+		header @html Cache-Control "no-cache"
+	}
+}

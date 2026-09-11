@@ -1,0 +1,30 @@
+# Надстройка для Cloudflare Tunnel — когда своего сервера с белым адресом нет.
+#
+# cloudflared соединяется с Cloudflare изнутри наружу, поэтому не нужны ни белый
+# IP, ни проброс портов, ни открытый 443. Сертификат выдаёт Cloudflare, и Caddy
+# переключается на обычный HTTP внутри докер-сети.
+#
+# Запуск:
+#   docker compose -f docker-compose.yml -f docker-compose.tunnel.yml up -d --build
+
+services:
+  web:
+    # Наружу ничего не публикуем: доступ идёт только через туннель.
+    # !override требует Docker Compose 2.24 и новее. На старом список портов
+    # просто останется — за домашним роутером это безвредно, наружу они всё
+    # равно не проброшены.
+    ports: !override []
+    volumes:
+      - ./Caddyfile.tunnel:/etc/caddy/Caddyfile:ro
+      - ../ReactFrond/client-rust/dist:/srv:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    depends_on:
+      - web
+    # Токен берётся в панели Cloudflare при создании туннеля.
+    # В туннеле указать: домен -> http://web:80
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN:?токен туннеля из панели Cloudflare}

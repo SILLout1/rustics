@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#16091F" />
+
+    <title>RUSTICS — ванильный сервер Rust x1 без доната</title>
+    <meta
+      name="description"
+      content="Классический Rust x1: сбор и крафт без ускорений, никаких платных привилегий. Вайп карты раз в неделю, 150 слотов, живое сообщество в Discord и Telegram."
+    />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- превью ссылки в Telegram, Discord и ВК -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="RUSTICS" />
+    <meta property="og:title" content="RUSTICS — твой уютный сервер Rust" />
+    <meta
+      property="og:description"
+      content="Ваниль x1 без доната. Всё, что у вас будет на вайпе, вы добыли сами."
+    />
+    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- шрифты и герой грузим заранее: они появляются на первом экране -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/src/assets/fonts/oswald-cyrillic-600-normal.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/src/assets/fonts/manrope-cyrillic-400-normal.woff2"
+      crossorigin
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

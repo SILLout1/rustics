@@ -1,0 +1,87 @@
+# Опрос игрового сервера по расписанию.
+#
+# Заменяет собой бэкенд: своей машины у нас нет, а список игроков отдаёт только
+# сам сервер и только по UDP. Раннер GitHub — единственное бесплатное место,
+# откуда до него можно достучаться.
+#
+# Первый запуск делать вручную: Actions -> Опрос сервера -> Run workflow.
+# Он же и проверит, пропускает ли раннер UDP. Не пропустит — шаг упадёт с
+# понятной ошибкой, и дальше эту схему строить не на чем.
+
+name: Опрос сервера
+
+on:
+  schedule:
+    # Раз в пять минут. Расписание у GitHub «по возможности»: под нагрузкой
+    # запуск опаздывает на 5-10 минут, поэтому порог простоя в скрипте выставлен
+    # с запасом (STATS_MAX_GAP_MINUTES), иначе часть замеров не засчитывалась бы.
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+# Нужно, чтобы workflow мог запушить замер обратно в репозиторий
+permissions:
+  contents: write
+
+# Замеры не должны накладываться друг на друга: два одновременных пуша в одну
+# ветку приведут к конфликту, а данные — к двойному начислению.
+concurrency:
+  group: server-stats
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Зависимостей у скрипта нет — только стандартные модули Node,
+      # поэтому ни npm install, ни сборки не требуется
+
+      - name: Спросить сервер
+        env:
+          SERVER_HOST: 195.18.27.169
+          SERVER_PORT: '35100'
+          SERVER_QUERY_PORT: '35110'
+          STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
+          STATS_MAX_GAP_MINUTES: '25'
+          DATA_DIR: data
+        run: node tools/poll.mjs
+
+      - name: Опубликовать замер
+        run: |
+          set -e
+
+          # Замеры держим в отдельной ветке. Если класть их в main, сайт будет
+          # пересобираться каждые пять минут, а история кода утонет в них.
+          cp -r data "$RUNNER_TEMP/fresh"
+
+          git config user.name  "rustics-stats"
+          git config user.email "actions@users.noreply.github.com"
+
+          if git ls-remote --exit-code --heads origin data >/dev/null 2>&1; then
+            git fetch origin data --depth=1
+            git checkout -B data origin/data
+          else
+            # Первый запуск: ветки ещё нет. Делаем её сиротой — в ней только
+            # замеры, history кода там не нужна.
+            git checkout --orphan data
+            git rm -rf . --quiet || true
+          fi
+
+          rm -rf ./data
+          cp -r "$RUNNER_TEMP/fresh" ./data
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "Данные не изменились — коммит не нужен"
+          else
+            git commit -m "Замер $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push origin data
+          fi

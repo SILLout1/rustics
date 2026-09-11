@@ -1,0 +1,56 @@
+# Весь сайт на одной бесплатной машине: Caddy отдаёт собранный фронт, сам получает
+# сертификат Let's Encrypt и проксирует /api в контейнер функций.
+#
+# Один домен на всё — требование Steam: он возвращает игрока по адресу из
+# openid.return_to и сверяет, что тот лежит внутри realm. Заодно не нужен CORS.
+#
+# Запуск:
+#   1) собрать фронт:  cd ReactFrond/client-rust && npm ci && npm run build
+#   2) cp .env.example .env  и заполнить
+#   3) docker compose up -d --build
+
+services:
+  api:
+    build:
+      context: ../api
+    restart: unless-stopped
+    environment:
+      STEAM_API_KEY: ${STEAM_API_KEY:?ключ с steamcommunity.com/dev/apikey}
+      SITE_URL: ${SITE_URL:?адрес сайта целиком, например https://rustics.ru}
+      SERVER_HOST: ${SERVER_HOST:?адрес игрового сервера}
+      SERVER_PORT: ${SERVER_PORT:?игровой порт}
+      SERVER_QUERY_PORT: ${SERVER_QUERY_PORT:?порт запроса, обычно игровой + 10}
+      # Пусто намеренно. Учётки хранилища у нас нет, а хост, если пытается к ней
+      # достучаться и не может, уходит в состояние Unhealthy и перестаёт отвечать
+      # на запросы вообще. Триггеров, которым хранилище нужно, в проекте не
+      # осталось; опрос ведёт фоновая служба StatsPoller.
+      AzureWebJobsStorage: ""
+      AzureWebJobsSecretStorageType: files
+    volumes:
+      # История переживает пересборку образа только здесь
+      - stats:/data
+    expose:
+      - "80"
+
+  web:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:?домен без https, например rustics.ru}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ../ReactFrond/client-rust/dist:/srv:ro
+      # Выданные сертификаты: без этого тома Caddy будет просить новый при каждом
+      # перезапуске и упрётся в лимиты Let's Encrypt
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  stats:
+  caddy_data:
+  caddy_config:
