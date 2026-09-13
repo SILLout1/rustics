@@ -26,6 +26,10 @@ const CFG = {
 
   telegram: 'https://t.me/rustics0',
 
+  // Куда ведёт кнопка «Поддержать сервер». Раньше вела в Telegram — это было
+  // заглушкой, пока клиент не завёл приём платежей.
+  donate: 'https://www.donationalerts.com/r/rustics777',
+
   maxPlayers: 200,
 };
 
@@ -67,39 +71,6 @@ function LangSwitch({ lang, setLang }) {
         </div>
       )}
     </div>
-  );
-}
-
-function Spark({ points, t }) {
-  if (!points || points.length < 2) return null;
-
-  const W = 600;
-  const H = 90;
-  const peak = Math.max(1, ...points.map((p) => p.players));
-  const step = W / (points.length - 1);
-
-  const xy = points.map((p, i) => [i * step, H - (p.players / peak) * (H - 8)]);
-  const line = xy.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
-  const area = `${line} L${W} ${H} L0 ${H} Z`;
-
-  const first = new Date(points[0].at);
-  const last = new Date(points[points.length - 1].at);
-  const hhmm = (d) => d.toLocaleTimeString(t.locale, { hour: '2-digit', minute: '2-digit' });
-
-  return (
-    <figure className="spark" data-reveal>
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-        <path className="spark__area" d={area} />
-        {/* pathLength="1" нормирует длину: штриховку можно задавать в долях,
-            не зная, насколько длинной вышла ломаная на этих данных */}
-        <path className="spark__line" d={line} pathLength="1" />
-      </svg>
-      <figcaption className="spark__cap">
-        <span>{hhmm(first)}</span>
-        <span>{t.top.peak} {peak}</span>
-        <span>{hhmm(last)}</span>
-      </figcaption>
-    </figure>
   );
 }
 
@@ -153,14 +124,6 @@ const ICON = {
   vk: 'M13.2 18.3c-6.1 0-9.6-4.2-9.7-11.2h3.1c.1 5.1 2.3 7.2 4.1 7.6V7.1h2.9v4.5c1.7-.2 3.5-2.2 4.1-4.5h2.9c-.5 2.8-2.4 4.8-3.8 5.6 1.4.7 3.6 2.4 4.4 5.6h-3.2c-.6-2-2.2-3.5-4.4-3.7v3.7h-.4Z',
   dc: 'M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.099.246.198.3728.2924a.077.077 0 0 1-.0066.1276 12.2986 12.2986 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 0 0 .0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 0 0 .0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 0 0-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z',
 };
-
-/* Время в игре: до часа показываем минутами, дальше часами.
-   Пока история короткая, у всех выходило «0.0 ч» и таблица читалась как
-   сломанная — хотя данные были верные, просто мелкие. */
-function playtime(minutes, t) {
-  if (minutes < 60) return `${Math.max(1, Math.round(minutes))} ${t.top.min}`;
-  return `${(minutes / 60).toFixed(1)} ${t.top.hr}`;
-}
 
 /* ---------- значки соцсетей в шапке ----------
    Мелкие, приглушённые, цвет сети проступает только под курсором: это спутники
@@ -358,9 +321,6 @@ export default function App() {
   const [authError, setAuthError] = useState(null);
   const [server, setServer] = useState(null);
   const [monitorDown, setMonitorDown] = useState(false);
-  const [period, setPeriod] = useState('now');  
-  const [stats, setStats] = useState(null);    
-  const [history, setHistory] = useState(null);  
   const [top, setTop] = useState(null);
   const [copied, setCopied] = useState(false);
   const [stuck, setStuck] = useState(false);
@@ -492,34 +452,6 @@ export default function App() {
     run();
     return () => { alive = false; clearTimeout(timer); };
   }, []);
-  useEffect(() => {
-    if (period === 'now') return;
-
-    let alive = true;
-    setStats(null);
-
-    fetch(`${CFG.api}/server/top?period=${period}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((j) => { if (alive) setStats(j); })
-      .catch(() => { if (alive) setStats(null); });
-
-    return () => { alive = false; };
-  }, [period]);
-
-  useEffect(() => {
-    let alive = true;
-
-    const load = () =>
-      fetch(`${CFG.api}/server/history?hours=24`)
-        .then((r) => (r.ok ? r.json() : null))
-        .then((j) => { if (alive) setHistory(j?.points ?? null); })
-        .catch(() => { if (alive) setHistory(null); });
-
-    load();
-    const tick = setInterval(load, 300000);
-
-    return () => { alive = false; clearInterval(tick); };
-  }, []);
 
   useEffect(() => {
     const on = () => setStuck(window.scrollY > 12);
@@ -542,15 +474,8 @@ export default function App() {
   const slots = server?.maxPlayers ?? CFG.maxPlayers;
   const live = typeof online === 'number';
 
-  const rows = period === 'now' ? top : stats?.rows ?? null;
-
-  const empty = (() => {
-    if (period === 'now') return top ? t.top.emptyNow : t.top.offlineNow;
-    if (!stats) return t.top.offlineStats;
-
-    const since = stats.since && new Date(stats.since).toLocaleDateString(t.locale);
-    return since ? t.top.sinceKnown(since) : t.top.sinceUnknown;
-  })();
+  // Счётчик берём из статуса сервера, а если его нет — по длине списка ников
+  const onlineCount = live ? online : top ? top.length : null;
 
   const video = (className) => (
     <video className={className} autoPlay muted loop playsInline poster={heroPoster}
@@ -724,48 +649,23 @@ export default function App() {
       <section className="sec" id="top">
         <div className="shell">
           <h2 className="h2">{t.top.title}</h2>
-          <p className="lead">{period === 'now' ? t.top.leadNow : t.top.leadPeriod}</p>
+          <p className="lead">{t.top.lead}</p>
 
-          <Spark points={history} t={t} />
-
-          <div className="tabs" role="tablist" aria-label={t.top.periodLabel}>
-            {['now', 'month', 'all'].map((id) => (
-              <button
-                key={id}
-                role="tab"
-                aria-selected={period === id}
-                className="tabs__b"
-                data-active={period === id}
-                onClick={() => setPeriod(id)}
-              >
-                {t.top.tabs[id]}
-              </button>
-            ))}
+          <div className="who__count">
+            <span className="who__dot" data-off={onlineCount === null} />
+            <b>{onlineCount ?? '—'}</b>
+            <span className="who__slots">/{slots}</span>
+            <span className="who__cap">{t.top.count}</span>
           </div>
 
-          {rows && rows.length ? (
-            <div className="tops">
-              {[rows.slice(0, 5), rows.slice(5, 10)].map((half, col) =>
-                half.length ? (
-                  <table className="tbl" key={col} data-reveal>
-                    <thead>
-                      <tr><th>#</th><th>{t.top.colPlayer}</th><th>{t.top.colTime}</th></tr>
-                    </thead>
-                    <tbody>
-                      {half.map((pl, i) => (
-                        <tr key={pl.name + i}>
-                          <td className="tbl__rank">{col * 5 + i + 1}</td>
-                          <td>{pl.name}</td>
-                          <td className="tbl__time">{playtime(pl.value, t)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : null
-              )}
-            </div>
+          {top && top.length ? (
+            <ul className="who">
+              {top.map((pl, i) => (
+                <li className="who__nick" key={pl.name + i}>{pl.name}</li>
+              ))}
+            </ul>
           ) : (
-            <div className="stub">{empty}</div>
+            <div className="stub">{top ? t.top.emptyNow : t.top.offlineNow}</div>
           )}
         </div>
       </section>
@@ -806,7 +706,7 @@ export default function App() {
                   {t.help.points.map((point) => <li key={point}>{point}</li>)}
                 </ul>
               </div>
-              <a className="btn btn--warm" href={CFG.telegram} target="_blank" rel="noreferrer">
+              <a className="btn btn--warm" href={CFG.donate} target="_blank" rel="noreferrer">
                 {t.help.button}
               </a>
             </div>

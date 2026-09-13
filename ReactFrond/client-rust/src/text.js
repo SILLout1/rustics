@@ -14,7 +14,7 @@ export const TEXT = {
     pageTitle: 'RUSTICS — ванильный сервер Rust x1 без доната',
     pageDescription: 'Классический Rust x1: сбор и крафт без ускорений, никаких платных привилегий. Вайп карты раз в неделю, 200 слотов, живое сообщество в Discord и Telegram.',
 
-    nav: { server: 'Сервер', top: 'Топ игроков', rules: 'Правила', help: 'Помощь' },
+    nav: { server: 'Сервер', top: 'Игроки', rules: 'Правила', help: 'Помощь' },
     auth: {
       signIn: 'Войти',
       signOut: 'Выйти',
@@ -69,21 +69,11 @@ export const TEXT = {
     },
 
     top: {
-      title: 'Топ игроков',
-      leadNow: 'Кто дольше всех в игре прямо сейчас. Список идёт напрямую с игрового сервера и обновляется сам.',
-      leadPeriod: 'Сколько наиграно на сервере за период. Считаем сами, опрашивая сервер каждые пять минут.',
-      periodLabel: 'Период',
-      tabs: { now: 'Сейчас', month: 'Месяц', all: 'За всё время' },
-      colPlayer: 'Игрок',
-      colTime: 'В игре',
-      min: 'мин',
-      hr: 'ч',
-      peak: 'Пик за сутки:',
+      title: 'Кто сейчас на сервере',
+      lead: 'Живой список: кто в игре прямо сейчас. Идёт напрямую с игрового сервера и обновляется сам.',
+      count: 'сейчас в игре',
       emptyNow: 'Сейчас на сервере никого. Загляните позже — или зайдите первым.',
       offlineNow: 'Список игроков сейчас недоступен.',
-      offlineStats: 'Статистика сейчас недоступна.',
-      sinceKnown: (d) => `Наблюдение началось ${d} — за этот период данных пока не набралось.`,
-      sinceUnknown: 'Наблюдение только началось. Первые данные появятся, как только на сервер кто-нибудь зайдёт.',
     },
 
     rules: {
@@ -154,7 +144,7 @@ export const TEXT = {
       copied: 'скопировано',
       colServer: 'Сервер',
       linkAbout: 'О сервере',
-      linkTop: 'Топ игроков',
+      linkTop: 'Игроки',
       linkRules: 'Правила',
       linkHelp: 'Помочь серверу',
       colCommunity: 'Сообщество',
@@ -171,7 +161,7 @@ export const TEXT = {
     pageTitle: 'RUSTICS — vanilla Rust x1 server, nothing to buy',
     pageDescription: 'Classic Rust x1: gathering and crafting at stock rates, no paid perks. Weekly map wipe, 200 slots, an active community on Discord and Telegram.',
 
-    nav: { server: 'Server', top: 'Top players', rules: 'Rules', help: 'Support' },
+    nav: { server: 'Server', top: 'Players', rules: 'Rules', help: 'Support' },
     auth: {
       signIn: 'Sign in',
       signOut: 'Sign out',
@@ -226,21 +216,11 @@ export const TEXT = {
     },
 
     top: {
-      title: 'Top players',
-      leadNow: 'Who has been in the game longest right now. The list comes straight from the game server and refreshes itself.',
-      leadPeriod: 'Time played on the server over the period. We count it ourselves, polling the server every five minutes.',
-      periodLabel: 'Period',
-      tabs: { now: 'Now', month: 'Month', all: 'All time' },
-      colPlayer: 'Player',
-      colTime: 'In game',
-      min: 'min',
-      hr: 'h',
-      peak: 'Peak today:',
+      title: 'Who is on the server',
+      lead: 'A live list: who is in the game right now. It comes straight from the game server and refreshes itself.',
+      count: 'players online',
       emptyNow: 'Nobody is on the server right now. Check back later — or be the first one in.',
       offlineNow: 'The player list is unavailable right now.',
-      offlineStats: 'Statistics are unavailable right now.',
-      sinceKnown: (d) => `Tracking started on ${d} — there is not enough data for this period yet.`,
-      sinceUnknown: 'Tracking has just started. The first numbers will appear as soon as someone joins the server.',
     },
 
     rules: {
@@ -311,7 +291,7 @@ export const TEXT = {
       copied: 'copied',
       colServer: 'Server',
       linkAbout: 'About the server',
-      linkTop: 'Top players',
+      linkTop: 'Players',
       linkRules: 'Rules',
       linkHelp: 'Support the server',
       colCommunity: 'Community',
