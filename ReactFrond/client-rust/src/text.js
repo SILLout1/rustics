@@ -50,7 +50,7 @@ export const TEXT = {
         ['нет', 'Лимита команды'],
         ['200', 'Слотов'],
         ['4000', 'Размер карты'],
-        ['×0.5', 'Содержание шкафа'],
+        ['/2', 'Содержание шкафа'],
         ['нет', 'Платных привилегий'],
       ],
       wipe: [
@@ -62,7 +62,7 @@ export const TEXT = {
         ['Рейт X1, без ускорений', 'Добыча идёт ровно так, как задумано разработчиками. Никаких ×5 и мгновенного крафта — ценность каждой найденной бочки на месте.'],
         ['Без доната', 'На сервере нечего купить. Ни китов, ни привилегий, ни приоритета в очереди. Всё решают время и руки.'],
         ['NO LIMIT на состав', 'Ограничения на количество игроков в команде нет. Играйте соло, вдвоём или большим кланом — как захотите.'],
-        ['Содержание шкафа ×0.5', 'Ресурсов на upkeep уходит вдвое меньше. База не рассыпется, пока вы пару дней не заходили.'],
+        ['Содержание шкафа в 2 раза меньше', 'Ресурсов на содержание уходит вдвое меньше.'],
         ['Карта 4000', 'Хватает и на соло-домик в лесу, и на клановую крепость. Каждый вайп — свежая процедурная карта.'],
         ['Живая администрация', 'Админы сидят в чате и в Discord. Жалобы разбираем, а не складываем в стол.'],
       ],
@@ -70,8 +70,10 @@ export const TEXT = {
 
     top: {
       title: 'Кто сейчас на сервере',
-      lead: 'Живой список: кто в игре прямо сейчас. Идёт напрямую с игрового сервера и обновляется сам.',
+      lead: 'Живой список: кто в игре прямо сейчас и сколько уже сидит на сервере без выхода. Идёт напрямую с игрового сервера и обновляется сам.',
       count: 'сейчас в игре',
+      hr: 'ч',
+      min: 'мин',
       emptyNow: 'Сейчас на сервере никого. Загляните позже — или зайдите первым.',
       offlineNow: 'Список игроков сейчас недоступен.',
     },
@@ -197,7 +199,7 @@ export const TEXT = {
         ['none', 'Team limit'],
         ['200', 'Slots'],
         ['4000', 'Map size'],
-        ['×0.5', 'Upkeep cost'],
+        ['/2', 'Upkeep cost'],
         ['none', 'Paid perks'],
       ],
       wipe: [
@@ -209,7 +211,7 @@ export const TEXT = {
         ['X1 rate, no boosts', 'Gathering works exactly as the developers intended. No ×5, no instant craft — every barrel you find still counts for something.'],
         ['Nothing to buy', 'There is no shop. No kits, no perks, no queue priority. Time and your own hands decide everything.'],
         ['No team limit', 'There is no cap on how many people play together. Go solo, duo or bring a whole clan — your call.'],
-        ['Upkeep ×0.5', 'Bases cost half the usual resources to maintain. Yours will not crumble because you missed a couple of days.'],
+        ['Upkeep cut in half', 'Maintaining your base costs half the usual resources.'],
         ['Map size 4000', 'Room for a solo hut in the woods and for a clan fortress alike. Every wipe brings a fresh procedural map.'],
         ['Admins who show up', 'Admins sit in chat and on Discord. Reports get handled, not filed away.'],
       ],
@@ -217,8 +219,10 @@ export const TEXT = {
 
     top: {
       title: 'Who is on the server',
-      lead: 'A live list: who is in the game right now. It comes straight from the game server and refreshes itself.',
+      lead: 'A live list: who is in the game right now and how long they have been on without leaving. It comes straight from the game server and refreshes itself.',
       count: 'players online',
+      hr: 'h',
+      min: 'min',
       emptyNow: 'Nobody is on the server right now. Check back later — or be the first one in.',
       offlineNow: 'The player list is unavailable right now.',
     },

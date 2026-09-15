@@ -969,6 +969,39 @@ a { color: inherit; }
 }
 .who__dot[data-off='true'] { background: var(--dim); box-shadow: none; }
 
+/* полоска заполненности: сколько слотов занято прямо сейчас */
+.who__bar {
+  max-width: 360px;
+  height: 6px;
+  margin: -8px 0 24px;
+  border-radius: 999px;
+  background: rgba(71, 56, 115, 0.45);
+}
+.who__fill {
+  position: relative;
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #7D4DAA, #CE70B7 60%, var(--sun));
+  box-shadow: 0 0 12px rgba(206, 112, 183, 0.35);
+  transition: width 0.7s cubic-bezier(0.3, 0.6, 0.3, 1);
+}
+/* светящийся край — там, где сейчас заканчивается онлайн */
+.who__fill::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--sun);
+  filter: blur(5px);
+  opacity: 0.85;
+  transform: translateY(-50%);
+}
+.who__fill[data-empty='true']::after { display: none; }
+
 .who {
   display: flex;
   flex-wrap: wrap;
@@ -978,16 +1011,25 @@ a { color: inherit; }
   list-style: none;
 }
 .who__nick {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
   max-width: 100%;
   padding: 7px 14px;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 14px;
   color: var(--text);
   background: var(--deep);
   border-radius: 999px;
   box-shadow: inset 0 0 0 1px var(--hair);
+}
+/* длинный ник обрезаем, а время не трогаем — ради него чип и читают */
+.who__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.who__time {
+  flex-shrink: 0;
+  font-size: 12.5px;
+  color: var(--sun);
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- помощь серверу: единственный тёплый блок ---------- */

@@ -658,11 +658,40 @@ export default function App() {
             <span className="who__cap">{t.top.count}</span>
           </div>
 
+          {/* Заполненность сервера. Хоть один игрок — полоска видна: иначе
+              при 1/200 она выглядела бы пустой, будто онлайна нет вовсе */}
+          <div
+            className="who__bar"
+            role="progressbar"
+            aria-label={t.top.count}
+            aria-valuemin={0}
+            aria-valuemax={slots}
+            aria-valuenow={onlineCount ?? 0}
+          >
+            <span
+              className="who__fill"
+              data-empty={!onlineCount}
+              style={{ width: `${onlineCount ? Math.max(3, Math.min(100, (onlineCount / slots) * 100)) : 0}%` }}
+            />
+          </div>
+
           {top && top.length ? (
             <ul className="who">
-              {top.map((pl, i) => (
-                <li className="who__nick" key={pl.name + i}>{pl.name}</li>
-              ))}
+              {top.map((pl, i) => {
+                // value — минуты текущей сессии: сервер сам сообщает, сколько игрок уже не выходил
+                const m = Math.max(0, Math.round(pl.value ?? 0));
+                const h = Math.floor(m / 60);
+                const time = h
+                  ? `${h} ${t.top.hr}${m % 60 ? ` ${m % 60} ${t.top.min}` : ''}`
+                  : `${Math.max(1, m)} ${t.top.min}`;
+
+                return (
+                  <li className="who__nick" key={pl.name + i} title={`${pl.name} — ${time}`}>
+                    <span className="who__name">{pl.name}</span>
+                    <span className="who__time">{time}</span>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <div className="stub">{top ? t.top.emptyNow : t.top.offlineNow}</div>
