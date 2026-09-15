@@ -92,16 +92,16 @@ public class ServerStats
     public static async Task PollOnce(ILogger log)
     {
         var (host, port) = A2S.Address();
-        if (host is null || port == 0)
+        if (!Rcon.Configured() && (host is null || port == 0))
         {
-            log.LogError("SERVER_HOST или SERVER_QUERY_PORT не заданы — историю копить не из чего");
+            log.LogError("Не задан ни RCON, ни SERVER_HOST с SERVER_QUERY_PORT — историю копить не из чего");
             return;
         }
 
         List<A2S.Player> online;
         try
         {
-            online = await A2S.Players(host, port, TimeSpan.FromSeconds(6));
+            online = await Rcon.Online(TimeSpan.FromSeconds(6));
         }
         catch (Exception e)
         {

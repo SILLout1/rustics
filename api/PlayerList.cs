@@ -72,15 +72,15 @@ public class PlayerList
         // Порт запроса — не игровой. У Rust он обычно на 10 больше игрового
         // (35100 -> 35110); точное значение видно в выдаче Steam в поле addr.
         var (host, port) = A2S.Address();
-        if (host is null || port == 0)
+        if (!Rcon.Configured() && (host is null || port == 0))
         {
-            _log.LogError("SERVER_HOST или SERVER_QUERY_PORT не заданы — некого спрашивать");
+            _log.LogError("Не задан ни RCON, ни SERVER_HOST с SERVER_QUERY_PORT — некого спрашивать");
             return (false, Err("no_server_address"));
         }
 
         try
         {
-            var players = await A2S.Players(host, port, TimeSpan.FromSeconds(6));
+            var players = await Rcon.Online(TimeSpan.FromSeconds(6));
 
             // Самые засидевшиеся — наверх: это и есть интересная часть таблицы
             var rows = players
