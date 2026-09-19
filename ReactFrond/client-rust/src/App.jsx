@@ -15,7 +15,6 @@ const CFG = {
   serverIp: '195.18.27.169',
   serverPort: '35100',
 
-  bmServerId: '27796179',
   api: '/api',
 
   discord: 'https://discord.com/invite/vUfPRa3QKe',

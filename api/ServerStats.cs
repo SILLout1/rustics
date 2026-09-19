@@ -327,7 +327,7 @@ public class ServerStats
     {
         var res = req.CreateResponse(HttpStatusCode.OK);
         res.Headers.Add("Content-Type", "application/json; charset=utf-8");
-        res.Headers.Add("Access-Control-Allow-Origin", "*");
+        Cors.Apply(req, res);
         res.Headers.Add("Cache-Control", "public, max-age=60");
         await res.WriteStringAsync(JsonSerializer.Serialize(body));
         return res;

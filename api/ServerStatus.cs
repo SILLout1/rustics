@@ -38,7 +38,7 @@ public class ServerStatus
 
         var res = req.CreateResponse(ok ? HttpStatusCode.OK : HttpStatusCode.BadGateway);
         res.Headers.Add("Content-Type", "application/json; charset=utf-8");
-        res.Headers.Add("Access-Control-Allow-Origin", "*");
+        Cors.Apply(req, res);
         res.Headers.Add("Cache-Control", "public, max-age=30");
         await res.WriteStringAsync(body);
         return res;
