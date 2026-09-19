@@ -494,7 +494,7 @@ a { color: inherit; }
 .connect {
   position: relative;
   z-index: 2;
-  margin-top: -84px;
+  margin-top: -154px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -1177,7 +1177,7 @@ a { color: inherit; }
 
   .hero__media { aspect-ratio: 886 / 1258; max-height: 78vh; }
 
-  .connect { grid-template-columns: 1fr; gap: 14px; margin-top: -46px; }
+  .connect { grid-template-columns: 1fr; gap: 14px; margin-top: -90px; }
   .status { border-right: 0; border-bottom: 1px solid var(--line); padding: 0 0 14px; }
   /* Кнопки во всю ширину и поровну: на телефоне обе должны попадать
      под большой палец, а «Играть» остаётся первой по порядку чтения. */
