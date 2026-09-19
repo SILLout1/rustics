@@ -1,0 +1,61 @@
+# Хостинг бекенда на Render: бесплатный тариф, сборка из api/Dockerfile,
+# обновление на каждый push в main. Фронт пока не выкладываем — он появится
+# здесь же, когда будет свой домен (вход через Steam требует одного домена).
+#
+# Как поднять: Render -> New -> Blueprint -> этот репозиторий. Render прочитает
+# этот файл и спросит значения для переменных, помеченных sync: false.
+#
+# Что помнить про бесплатный тариф:
+#   - сервис засыпает после 15 минут без запросов, первый запрос после сна
+#     ждёт около минуты, пока контейнер поднимается;
+#   - постоянного диска нет, поэтому накопленная статистика обнуляется при
+#     каждом перезапуске и обновлении. Живой список игроков от этого не страдает.
+
+services:
+  - type: web
+    name: rustics-api
+    runtime: docker
+    plan: free
+    region: frankfurt          # ближе всего к игровому серверу и игрокам
+    branch: main
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: ./api
+    autoDeployTrigger: commit
+    healthCheckPath: /api/server/status
+
+    envVars:
+      # Render отдаёт трафик на порт из PORT и сам его проверяет. Хост функций
+      # слушает то, что указано здесь, иначе он остался бы на 80 и Render
+      # решил бы, что сервис не поднялся.
+      - key: PORT
+        value: 10000
+      - key: ASPNETCORE_URLS
+        value: http://0.0.0.0:10000
+
+      # Учётки хранилища у нас нет. Пусто намеренно: хост, который пытается к
+      # ней достучаться и не может, уходит в Unhealthy и перестаёт отвечать.
+      - key: AzureWebJobsStorage
+        value: ""
+      - key: AzureWebJobsSecretStorageType
+        value: files
+
+      - key: SERVER_HOST
+        value: 195.18.27.169
+      - key: SERVER_PORT
+        value: 35100
+      - key: SERVER_QUERY_PORT
+        value: 35110
+      - key: RCON_PORT
+        value: 35101
+
+      # Секреты: задаются в панели Render и в git не попадают.
+      # RCON_PASSWORD — полный доступ к консоли игрового сервера.
+      - key: STEAM_API_KEY
+        sync: false
+      - key: RCON_PASSWORD
+        sync: false
+
+      # Адрес сайта для входа через Steam. Пока фронта нет, вход не работает:
+      # Steam возвращает игрока на этот адрес и сверяет его с realm.
+      - key: SITE_URL
+        sync: false
