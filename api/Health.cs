@@ -16,14 +16,17 @@ namespace api;
 public class Health
 {
     [Function("Health")]
-    public HttpResponseData Run(
+    public async Task<HttpResponseData> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "health")]
         HttpRequestData req)
     {
         var res = req.CreateResponse(HttpStatusCode.OK);
         res.Headers.Add("Content-Type", "text/plain; charset=utf-8");
         res.Headers.Add("Cache-Control", "no-store");
-        res.WriteString("ok");
+
+        // Только асинхронная запись: хост в режиме ASP.NET Core запрещает
+        // синхронный вывод, и WriteString падал с 500 на каждом запросе.
+        await res.WriteStringAsync("ok");
         return res;
     }
 }
