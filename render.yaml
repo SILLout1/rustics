@@ -21,7 +21,9 @@ services:
     dockerfilePath: ./api/Dockerfile
     dockerContext: ./api
     autoDeployTrigger: commit
-    healthCheckPath: /api/server/status
+    # Только /api/health: он ни от чего внешнего не зависит. С /api/server/status
+    # бек ложился целиком, стоило игровому серверу пропасть из списка Steam.
+    healthCheckPath: /api/health
 
     envVars:
       # Render отдаёт трафик на порт из PORT и сам его проверяет. Хост функций
